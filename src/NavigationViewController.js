@@ -39,15 +39,18 @@ WebApp.NavigationViewController.prototype.loadView = function($element) {
 
 WebApp.NavigationViewController.prototype.push = function(vc) {
 	var that = this;
+	vc.navigationViewController = that;
+
 	that.willPush(vc);
 	that.willChangeTop();
 	that.history.push(vc);
-	vc.navigationViewController = that;
 	var $div = $('<div>');
-	$div.appendTo(that.contentElement);
 	vc.loadView($div, function() {
+		vc.willAppear();
+		$div.appendTo(that.contentElement);
 		that.didChangeTop();
 		that.didPush(vc);
+		vc.didAppear();
 	});
 }
 
