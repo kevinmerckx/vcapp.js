@@ -62,10 +62,11 @@ WebApp.Application = function(options) {
 	}
 
 	that.setRootViewController = function(vc) {
+		rootViewController && rootViewController.unloadView();
 		rootViewController = vc;
-		rootViewController && rootViewController.willUnload();
-		$("body").empty();
-		rootViewController && rootViewController.didUnload();
-		rootViewController.loadView($("body"));
+		vc && vc.willAppear();
+		vc.loadView($("body"), function() {
+			vc && vc.didAppear();
+		});
 	}
 }

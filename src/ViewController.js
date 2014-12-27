@@ -40,6 +40,7 @@ WebApp.ViewController.prototype.unloadView = function(done) {
 	var that = this;
 	that.willUnload();
 	that.element.remove();
+	done && done();
 	that.didUnload();
 }
 

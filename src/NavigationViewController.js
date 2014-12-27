@@ -43,13 +43,14 @@ WebApp.NavigationViewController.prototype.push = function(vc) {
 
 	that.willPush(vc);
 	that.willChangeTop();
+	vc.willAppear();
+	
 	that.history.push(vc);
 	var $div = $('<div>');
 	vc.loadView($div, function() {
-		vc.willAppear();
 		$div.appendTo(that.contentElement);
-		that.didChangeTop();
 		that.didPush(vc);
+		that.didChangeTop();
 		vc.didAppear();
 	});
 }
@@ -66,11 +67,13 @@ WebApp.NavigationViewController.prototype.pop = function() {
 
 	that.history.pop();
 
+	var nextVC = that.top();
+
+	nextVC && nextVC.willAppear();
+
 	that.didPop(vc);
 	that.didChangeTop();
 
-	var nextVC = that.top();
-	nextVC && nextVC.willAppear();
 	nextVC && nextVC.didAppear();
 
 	setTimeout(function() {
