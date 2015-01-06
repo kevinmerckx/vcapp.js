@@ -26,8 +26,14 @@ WebApp.registerViewController(
 					event.data.select(idx);
 				});
 			});
-			that.contentElement.addClass("has-tabs scroll-content");
+			$(that.contentElement).addClass("has-tabs scroll-content");
 			that.select(0);
+		},
+		willUnselect: function(idx) {
+			$(this.tabs[idx].container).hide();
+		},
+		willSelect: function(idx) {
+			$(this.tabs[idx].container).show();
 		},
 		didSelect: function(idx) {
 			$(">a.active", this.divTabs).removeClass("active");
@@ -56,8 +62,14 @@ WebApp.registerViewController(
 					event.data.select(idx);
 				});
 			});
-			that.contentElement.addClass("has-tabs scroll-content");
+			$(that.contentElement).addClass("has-tabs scroll-content");
 			that.select(0);
+		},
+		willUnselect: function(idx) {
+			$(this.tabs[idx].container).hide();
+		},
+		willSelect: function(idx) {
+			$(this.tabs[idx].container).show();
 		},
 		didSelect: function(idx) {
 			$(">a.active", this.divTabs).removeClass("active");
@@ -71,8 +83,9 @@ WebApp.registerViewController(
 	WebApp.NavigationViewController,
 	{
 		template: "templates/navView.html",
+		timeBeforeUnloadingView: 1000,
 		didLoad: function() {
-			this.contentElement.addClass("scroll-content has-header");
+			$(this.contentElement).addClass("scroll-content has-header");
 			this.uiElements.back.click(this, function(event) {
 				event.data.pop();
 			});
@@ -88,30 +101,32 @@ WebApp.registerViewController(
 		didPush: function() {
 			var that = this;
 			var top = this.top();
-			top.element.css("transition", "");
-			top.element.css("background-color","white");
+			var theTop = $(top.element);
+			theTop.css("transition", "");
+			theTop.css("background-color","white");
 			if(that.oldTop) {
-				top.element.css("left", "100%");
-				top.element.css("right", "-100%");
+				theTop.css("left", "100%");
+				theTop.css("right", "-100%");
 				setTimeout(function(){
-					top.element.css("transition", "left 0.3s, right 0.3s");
-					top.element.css("right", "0");
-					top.element.css("left", "0");
+					theTop.css("transition", "left 0.3s, right 0.3s");
+					theTop.css("right", "0");
+					theTop.css("left", "0");
 				}, 100);
 			} else {
-				top.element.css("right", "0");
-				top.element.css("left", "0");				
+				theTop.css("right", "0");
+				theTop.css("left", "0");				
 			}
 		},
 		willPop: function(vc) {
-			vc.element.css("transition", "left 0.3s, right 0.3s");
-			vc.element.css("left","100%");
-			vc.element.css("right","-100%");
+			var thePop = vc.element;
+			thePop.css("transition", "left 0.3s, right 0.3s");
+			thePop.css("left","100%");
+			thePop.css("right","-100%");
 		},
 		didPop: function() {
 		},
 		didChangeTop: function() {
-			this.uiElements.back.attr("disabled", this.history.length<=1);
+			$(this.uiElements.back).attr("disabled", this.history.length<=1);
 		}
 	}
 );
@@ -127,34 +142,34 @@ WebApp.registerViewController(
 		},
 		didLoad: function() {
 			var that = this;
-			that.element.addClass("padding").addClass("scroll-content");
+			$(that.element).addClass("padding").addClass("scroll-content");
 			var nvc = that.navigationViewController;
 			if(nvc) {
-				that.uiElements.go.click(that, function(event) {
+				$(that.uiElements.go).click(that, function(event) {
 					event.data.navigationViewController.push(
 						WebApp.createViewController("MainViewController")
 					);
 				});
-				that.uiElements.back.click(that, function(event) {
+				$(that.uiElements.back).click(that, function(event) {
 					event.data.navigationViewController.pop();
 				});
-				that.uiElements.home.click(that, function(event) {
+				$(that.uiElements.home).click(that, function(event) {
 					while(event.data.navigationViewController.history.length > 1) {
 						event.data.navigationViewController.pop();
 					}					
 				});
-				that.uiElements.back.attr("disabled", nvc.history.length<=1);
+				$(that.uiElements.back).attr("disabled", nvc.history.length<=1);
 			} else {
-				that.uiElements.go.attr("disabled", true);
-				that.uiElements.back.attr("disabled", true);
-				that.uiElements.home.attr("disabled", true);
+				$(that.uiElements.go).attr("disabled", true);
+				$(that.uiElements.back).attr("disabled", true);
+				$(that.uiElements.home).attr("disabled", true);
 			}
 		},
 		didAppear: function() {
 			var that = this;
 			var nvc = that.navigationViewController;
 			if(nvc) {
-				nvc.uiElements.title.text(that.ts);
+				$(nvc.uiElements.title).text(that.ts);
 			}
 		}
 	}
@@ -166,9 +181,9 @@ WebApp.registerViewController(
 	{
 		template: "templates/mainView2.html",
 		didLoad: function() {
-			this.element.addClass("scroll-content padding");
+			$(this.element).addClass("scroll-content padding");
 			if(this.navigationViewController) {
-				this.navigationViewController.uiElements.title.setText("Main view 2");
+				$(this.navigationViewController.uiElements.title).setText("Main view 2");
 			}
 			this.uiElements.openModal.click(function() {
 				var that = $(this);
@@ -192,7 +207,7 @@ WebApp.registerViewController(
 	{
 		template: "templates/mainView3.html",
 		didLoad: function() {
-			this.element.addClass("scroll-content padding");
+			$(this.element).addClass("scroll-content padding");
 		}
 	}
 );
@@ -204,7 +219,7 @@ WebApp.registerViewController(
 		template: "templates/modal.html",
 		open: function() {
 			this.willOpen();
-			this.loadView($("<div>"));
+			this.loadView($("<div>").get(0));
 			this.didOpen();
 		},
 		close: function() {

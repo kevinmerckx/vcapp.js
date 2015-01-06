@@ -2,9 +2,11 @@
 
 WebApp.NavigationViewController = function(options) {
 	var that = this;
-
+	
 	WebApp.ViewController.prototype.constructor.call(that, options);
 
+	that.timeBeforeUnloadingView = options.timeBeforeUnloadingView || 100;
+	
 	that.willChangeTop = options.willChangeTop || function() {};
 	that.didChangeTop = options.didChangeTop || function() {};
 	that.willPush = options.willPush || function() {};
@@ -19,20 +21,18 @@ WebApp.NavigationViewController = function(options) {
 WebApp.NavigationViewController.prototype = new WebApp.ViewController();
 WebApp.NavigationViewController.constructor = WebApp.NavigationViewController;
 
-WebApp.NavigationViewController.prototype.loadView = function($element) {
+WebApp.NavigationViewController.prototype.loadView = function(element) {
 	var that = this;
 	WebApp.ViewController.prototype.loadView.call(
 		that, 
-		$element, 
+		element, 
 		function() {
-			that.contentElement = $("view", that.element);
-			that.contentElement = that.contentElement.length>0 ? 
-				that.contentElement : $(that.contentElement[0]);
-			var top = that.contentElement.attr("top");
+			that.contentElement = that.element.querySelector("view");
+			var top = that.contentElement.getAttribute("top");
 			if(top) {
 				that.push(WebApp.createViewController(top));
 			}
-			that.contentElement.removeAttr("top");
+			that.contentElement.removeAttribute("top");
 		}
 	);
 }
@@ -46,9 +46,9 @@ WebApp.NavigationViewController.prototype.push = function(vc) {
 	vc.willAppear();
 	
 	that.history.push(vc);
-	var $div = $('<div>');
-	vc.loadView($div, function() {
-		$div.appendTo(that.contentElement);
+	var div = document.createElement('div');
+	vc.loadView(div, function() {
+		that.contentElement.appendChild(div);
 		that.didPush(vc);
 		that.didChangeTop();
 		vc.didAppear();
@@ -80,7 +80,7 @@ WebApp.NavigationViewController.prototype.pop = function() {
 		vc.willUnload();
 		vc.element.remove();
 		vc.didUnload();
-	}, 5000);
+	}, that.timeBeforeUnloadingView);
 }
 
 WebApp.NavigationViewController.prototype.top = function() {

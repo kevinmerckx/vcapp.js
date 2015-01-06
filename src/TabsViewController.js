@@ -7,6 +7,8 @@ WebApp.TabsViewController = function (options) {
 
 	that.willSelect = options.willSelect || function () {};
 	that.didSelect = options.didSelect || function () {};
+	that.willUnselect = options.willUnselect || function () {};
+	that.didUnselect = options.didUnselect || function () {};
 
 	that.contentElement = undefined;
 	that.tabs = [];
@@ -16,22 +18,23 @@ WebApp.TabsViewController = function (options) {
 WebApp.TabsViewController.prototype = new WebApp.ViewController();
 WebApp.TabsViewController.constructor = WebApp.TabsViewController;
 
-WebApp.TabsViewController.prototype.loadView = function ($element) {
+WebApp.TabsViewController.prototype.loadView = function (element) {
 	var that = this;
 	WebApp.ViewController.prototype.loadView.call(
-		that, $element, function () {
-			that.contentElement = $("view", that.element);
-			that.contentElement = that.contentElement.length > 0 ? that.contentElement : $(that.contentElement[0]);
-			$("tabs tab", that.element).each(function () {
+		that, element, function () {
+			that.contentElement = that.element.querySelector("view");
+			that.element.forEach("tabs tab", function(el) {
 				that.tabs.push({
-					label: $(this).attr("label"),
-					icon: $(this).attr("icon"),
-					viewController: WebApp.createViewController($(this).attr("root")),
-					container: $('<div>'),
+					label: el.getAttribute("label"),
+					icon: el.getAttribute("icon"),
+					viewController: WebApp.createViewController(el.getAttribute("root")),
+					container: document.createElement('div'),
 					isLoaded: false
 				});
 			});
-			$("tabs", that.element).remove();
+			that.element.forEach("tabs", function(el) {
+				el.remove();
+			});
 		}
 	);
 };
@@ -41,18 +44,17 @@ WebApp.TabsViewController.prototype.select = function (idx) {
 	if(idx<0 && idx >= that.tabs.length && idx != that.selected) {
 		return;
 	}
+	that.selected>=0 && that.willUnselect(that.selected);
 	that.willSelect(idx);
+	that.tabs[idx].viewController.willAppear();
 	if(!that.tabs[idx].isLoaded) {
-		that.contentElement.append(that.tabs[idx].container);
+		that.contentElement.appendChild(that.tabs[idx].container);
 		that.tabs[idx].viewController.loadView(that.tabs[idx].container);
 		that.tabs[idx].isLoaded = true;
 	}
-	if(that.selected >= 0) {
-		that.tabs[that.selected].container.hide();
-		that.tabs[idx].viewController.willAppear();
-		that.tabs[idx].container.show();
-		that.tabs[idx].viewController.didAppear();
-	}
+	
+	that.selected>=0 && that.didUnselect(that.selected);
 	that.selected = idx;
 	that.didSelect(idx);
+	that.tabs[idx].viewController.didAppear();
 };
