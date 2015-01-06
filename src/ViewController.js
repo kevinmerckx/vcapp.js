@@ -47,6 +47,12 @@ WebApp.ViewController.prototype.loadView = function(element, done) {
 }
 
 WebApp.ViewController.prototype.unloadView = function(done) {
+	/**
+	* 1. Warn the delegate that the view will unload
+	* 2. Remove the element from the DOM
+	* 3. Call the done callback
+	* 4. Warn the delegate that the view did unload
+	*/
 	var that = this;
 	that.willUnload();
 	that.element.remove();

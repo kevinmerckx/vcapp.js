@@ -1,3 +1,4 @@
+/* This function replaces the purpose of $.load */
 WebApp.loadTemplate = function(template) {
 	return {
 		into: function(element, done) {
@@ -12,6 +13,7 @@ WebApp.loadTemplate = function(template) {
 	}
 }
 
+/* This function looks for the elements defined by the selector inside the current DOM element and apply the f function for each of them */
 HTMLElement.prototype.forEach = function(selector, f) {
 	var els = this.querySelectorAll(selector);
 	Array.prototype.slice.call(els).forEach(f);
