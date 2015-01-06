@@ -86,10 +86,10 @@ WebApp.registerViewController(
 		timeBeforeUnloadingView: 1000,
 		didLoad: function() {
 			$(this.contentElement).addClass("scroll-content has-header");
-			this.uiElements.back.click(this, function(event) {
+			$(this.uiElements.back).click(this, function(event) {
 				event.data.pop();
 			});
-			this.uiElements.next.click(this, function(event) {
+			$(this.uiElements.next).click(this, function(event) {
 				event.data.push(
 					WebApp.createViewController("MainViewController")
 				);
@@ -118,12 +118,10 @@ WebApp.registerViewController(
 			}
 		},
 		willPop: function(vc) {
-			var thePop = vc.element;
+			var thePop = $(vc.element);
 			thePop.css("transition", "left 0.3s, right 0.3s");
 			thePop.css("left","100%");
 			thePop.css("right","-100%");
-		},
-		didPop: function() {
 		},
 		didChangeTop: function() {
 			$(this.uiElements.back).attr("disabled", this.history.length<=1);
@@ -185,7 +183,7 @@ WebApp.registerViewController(
 			if(this.navigationViewController) {
 				$(this.navigationViewController.uiElements.title).setText("Main view 2");
 			}
-			this.uiElements.openModal.click(function() {
+			$(this.uiElements.openModal).click(function() {
 				var that = $(this);
 				that.attr("disabled", true);
 				var modalVC = WebApp.createViewController(
@@ -225,7 +223,7 @@ WebApp.registerViewController(
 		close: function() {
 			var that = this;
 			that.willClose();
-			that.element
+			$(that.element)
 			.css("top", "150%");
 
 			setTimeout(function() {
@@ -234,7 +232,7 @@ WebApp.registerViewController(
 			}, 1000);
 		},
 		willLoad: function() {
-			this.element
+			$(this.element)
 			.addClass("scroll-content padding")
 			.css("position", "fixed")
 			.css("top", "100%")
@@ -248,11 +246,11 @@ WebApp.registerViewController(
 		},
 		didLoad: function() {
 			var that = this;
-			that.uiElements.close.click(that, function(event){
+			$(that.uiElements.close).click(that, function(event){
 				event.data.close();				
 			});
 			setTimeout(function(){
-				that.element.css("top","0");
+				$(that.element).css("top","0");
 			}, 100);
 		}
 	}
