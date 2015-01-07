@@ -3,6 +3,8 @@
 WebApp.ModalViewController = function (options) {
 	var that = this;
 
+	WebApp.ModalViewController.prototype.constructor.call(that, options);
+
 	that.open = options.open || function() {};
 	that.close = options.close || function() {};
 	
@@ -11,10 +13,6 @@ WebApp.ModalViewController = function (options) {
 	
 	that.willClose = options.willClose || function() {};
 	that.didClose = options.didClose || function() {};
-	
-	WebApp.ViewController.prototype.constructor.call(that, options);
 };
 
 WebApp.ModalViewController.prototype = new WebApp.ViewController();
-WebApp.ModalViewController.constructor = WebApp.ModalViewController;
-

@@ -17,10 +17,9 @@ WebApp.ViewController = function(options) {
 	that.element = undefined;
 
 	that.uiElements = {};
-}
 
-WebApp.ViewController.prototype.loadView = function(element, done) {
-	/**
+	this.loadView = function(element, done) {
+		/**
 	* 1. Warn the delegate that the view will load
 	* 2. If a template is given, go to step 4, otherwise go to step 3
 	* 3. Nothing to load, warn the delegate the view did load
@@ -30,32 +29,33 @@ WebApp.ViewController.prototype.loadView = function(element, done) {
 	* 6. Call the callback "done" if any
 	* 7. Warn the delegate that the view did load
 	*/
-	var that = this;
-	that.element = element;
-	that.willLoad();
-	if(that.options.template) {
-		WebApp.loadTemplate(that.options.template).into(that.element, function() {
-			Array.prototype.slice.call(that.element.querySelectorAll("*[id]")).forEach(function(el) {
-				that.uiElements[el.getAttribute("id")] = el;
+		var that = this;
+		that.element = element;
+		that.willLoad();
+		if(that.options.template) {
+			WebApp.loadTemplate(that.options.template).into(that.element, function() {
+				Array.prototype.slice.call(that.element.querySelectorAll("*[id]")).forEach(function(el) {
+					that.uiElements[el.getAttribute("id")] = el;
+				});
+				done && done();
+				that.didLoad();
 			});
-			done && done();
+		} else {
 			that.didLoad();
-		});
-	} else {
-		that.didLoad();
-	}
-}
+		}
+	};
 
-WebApp.ViewController.prototype.unloadView = function(done) {
-	/**
+	this.unloadView = function(done) {
+		/**
 	* 1. Warn the delegate that the view will unload
 	* 2. Remove the element from the DOM
 	* 3. Call the done callback
 	* 4. Warn the delegate that the view did unload
 	*/
-	var that = this;
-	that.willUnload();
-	that.element.remove();
-	done && done();
-	that.didUnload();
+		var that = this;
+		that.willUnload();
+		that.element.remove();
+		done && done();
+		that.didUnload();
+	};
 }
