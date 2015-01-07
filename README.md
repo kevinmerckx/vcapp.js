@@ -6,9 +6,8 @@ Module to handle basic mobile app and view controller logic. You could find very
 The advantage of such a library is to separate the logic from the style you may want to give to your application: Bootstrap, Ionic, jQuery Mobile etc.
 
 # How to use it?
-It needs jQuery to work. Any recent version is compatible because vcapp.js adds elements to the DOM.
+Include one file.
 
 ```
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="vcapp/src/vcapp.min.js"></script>
 ```
