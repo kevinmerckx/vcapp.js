@@ -25,7 +25,11 @@ WebApp.Application = function(options) {
 		}
 		that.didLaunch();
 	}
-
+	
+	that.getRootViewController = function() {
+		return rootViewController;
+	}
+	
 	that.setRootViewController = function(vc) {
 		/**
 		* 1. Unload the view of the previous root view controller if any
