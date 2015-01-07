@@ -21,7 +21,7 @@ WebApp.Application = function(options) {
 		if(options.rootViewController && WebApp.viewControllers[options.rootViewController]) {
 			that.setRootViewController(WebApp.createViewController(options.rootViewController));
 		} else {
-			that.setRootViewController(new ViewController());
+			that.setRootViewController(new WebApp.ViewController());
 		}
 		that.didLaunch();
 	}
