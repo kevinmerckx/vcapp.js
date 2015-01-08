@@ -7,24 +7,24 @@ WebApp.PopupViewController = function (options) {
 	
 	that.parentViewController = undefined;
 	
-	that.openIn = options.openIn || function(parentVC) {
+	that.openIn = that.options.openIn || function(parentVC) {
 		that.parentViewController = parentVC;
 		that.willOpen();
 		// Do something
 		that.didOpen();
 	};
 	
-	that.close = options.close || function() {
+	that.close = that.options.close || function() {
 		that.willClose();
 		// Do something
 		that.didClose();
 	};
 	
-	that.willOpen = options.willOpen || function() {};
-	that.didOpen = options.didOpen || function() {};
+	that.willOpen = that.options.willOpen || function() {};
+	that.didOpen = that.options.didOpen || function() {};
 	
-	that.willClose = options.willClose || function() {};
-	that.didClose = options.didClose || function() {};
+	that.willClose = that.options.willClose || function() {};
+	that.didClose = that.options.didClose || function() {};
 };
 
 WebApp.PopupViewController.prototype = new WebApp.ViewController();

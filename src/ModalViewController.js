@@ -5,14 +5,14 @@ WebApp.ModalViewController = function (options) {
 
 	WebApp.ModalViewController.prototype.constructor.call(that, options);
 
-	that.open = options.open || function() {};
-	that.close = options.close || function() {};
+	that.open = that.options.open || function() {};
+	that.close = that.options.close || function() {};
 	
-	that.willOpen = options.willOpen || function() {};
-	that.didOpen = options.didOpen || function() {};
+	that.willOpen = that.options.willOpen || function() {};
+	that.didOpen = that.options.didOpen || function() {};
 	
-	that.willClose = options.willClose || function() {};
-	that.didClose = options.didClose || function() {};
+	that.willClose = that.options.willClose || function() {};
+	that.didClose = that.options.didClose || function() {};
 };
 
 WebApp.ModalViewController.prototype = new WebApp.ViewController();
