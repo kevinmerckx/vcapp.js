@@ -18,6 +18,7 @@ WebApp.ViewController = function(options) {
 
 	that.uiElements = {};
 
+	that.isLoaded = false;
 	this.loadView = function(element, done) {
 		/**
 	* 1. Warn the delegate that the view will load
@@ -34,6 +35,7 @@ WebApp.ViewController = function(options) {
 		that.willLoad();
 		if(that.options.template) {
 			WebApp.loadTemplate(that.options.template).into(that.element, function() {
+				that.isLoaded = true;
 				Array.prototype.slice.call(that.element.querySelectorAll("*[id]")).forEach(function(el) {
 					that.uiElements[el.getAttribute("id")] = el;
 				});
@@ -53,6 +55,7 @@ WebApp.ViewController = function(options) {
 	* 4. Warn the delegate that the view did unload
 	*/
 		var that = this;
+		that.isLoaded = false;
 		that.willUnload();
 		that.element.remove();
 		done && done();
