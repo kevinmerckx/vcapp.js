@@ -1,8 +1,8 @@
-'use strict';
-
-WebApp.ViewController = function(options) {
-	var that = this;
-
+WebApp.makeViewController = function(options, that) {
+	'use strict';
+	
+	that = that || {};
+	
 	that.options = options || {};
 
 	that.willLoad = that.options.willLoad || function() {};
@@ -19,7 +19,7 @@ WebApp.ViewController = function(options) {
 	that.uiElements = {};
 
 	that.isLoaded = false;
-	this.loadView = function(element, done) {
+	that.loadView = function(element, done) {
 		/**
 	* 1. Warn the delegate that the view will load
 	* 2. If a template is given, go to step 4, otherwise go to step 3
@@ -30,7 +30,6 @@ WebApp.ViewController = function(options) {
 	* 6. Call the callback "done" if any
 	* 7. Warn the delegate that the view did load
 	*/
-		var that = this;
 		that.element = element;
 		that.willLoad();
 		if(that.options.template) {
@@ -47,18 +46,19 @@ WebApp.ViewController = function(options) {
 		}
 	};
 
-	this.unloadView = function(done) {
+	that.unloadView = function(done) {
 		/**
 	* 1. Warn the delegate that the view will unload
 	* 2. Remove the element from the DOM
 	* 3. Call the done callback
 	* 4. Warn the delegate that the view did unload
 	*/
-		var that = this;
 		that.isLoaded = false;
 		that.willUnload();
 		that.element.remove();
 		done && done();
 		that.didUnload();
 	};
-}
+	
+	return that;
+};

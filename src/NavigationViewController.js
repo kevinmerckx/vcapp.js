@@ -1,9 +1,7 @@
-'use strict';
-
-WebApp.NavigationViewController = function(options) {
-	var that = this;
-
-	WebApp.NavigationViewController.prototype.constructor.call(that, options);
+WebApp.makeNavigationViewController = function(options, that) {
+	'use strict';
+	
+	that = WebApp.makeViewController(options, that);
 
 	that.timeBeforeUnloadingView = that.options.timeBeforeUnloadingView || 100;
 
@@ -17,13 +15,13 @@ WebApp.NavigationViewController = function(options) {
 	that.contentElement;
 	that.history = [];
 
+	var superLoadView = that.loadView;
 	that.loadView = function(element) {
 		/**
 	* When it loads the view, it looks at the "top" attribute of the "view" element.
 	* Inside this attribute should be a view controller: we push this view controller.
 	*/
-		var that = this;
-		WebApp.NavigationViewController.prototype.loadView.call(
+		superLoadView.call(
 			that, 
 			element, 
 			function() {
@@ -48,8 +46,6 @@ WebApp.NavigationViewController = function(options) {
 	* 7. Warn the delegate that the top view controller has changed
 	* 8. Warn the pushed view controller that it appeared
 	*/
-
-		var that = this;
 		vc.navigationViewController = that;
 
 		that.willPush(vc);
@@ -78,8 +74,6 @@ WebApp.NavigationViewController = function(options) {
 	* 8. Remove the top view from the DOM
 	* 9. Warn the top view controller did unload
 	*/
-		var that = this;
-
 		var vc =  that.top();
 
 		if(!vc) return;
@@ -106,10 +100,9 @@ WebApp.NavigationViewController = function(options) {
 	};
 
 	that.top = function() {
-		var that = this;
 		if(that.history.length === 0) return;
 		return that.history[that.history.length-1];
 	};
+	
+	return that;
 }
-
-WebApp.NavigationViewController.prototype = new WebApp.ViewController();

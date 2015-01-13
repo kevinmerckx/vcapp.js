@@ -1,7 +1,7 @@
 'use strict';
 
-WebApp.Application = function(options) {
-	var that = this;
+WebApp.makeApplication = function(options, that) {
+	that = that || {};
 	options = options || {};
 
 	var rootViewController;
@@ -24,11 +24,11 @@ WebApp.Application = function(options) {
 			that.setRootViewController(new WebApp.ViewController());
 		}
 		that.didLaunch();
-	}
+	};
 	
 	that.getRootViewController = function() {
 		return rootViewController;
-	}
+	};
 	
 	that.setRootViewController = function(vc) {
 		/**
@@ -43,5 +43,7 @@ WebApp.Application = function(options) {
 		vc.loadView(document.querySelector("body"), function() {
 			vc && vc.didAppear();
 		});
-	}
-}
+	};
+	
+	return that;
+};

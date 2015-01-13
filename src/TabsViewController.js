@@ -1,9 +1,7 @@
-'use strict';
-
-WebApp.TabsViewController = function (options) {
-	var that = this;
-
-	WebApp.TabsViewController.prototype.constructor.call(that, options);
+WebApp.makeTabsViewController = function (options, that) {
+	'use strict';
+	
+	that = WebApp.makeViewController(options, that);
 
 	that.willSelect = options.willSelect || function () {};
 	that.didSelect = options.didSelect || function () {};
@@ -14,6 +12,7 @@ WebApp.TabsViewController = function (options) {
 	that.tabs = [];
 	that.selected = -1;
 
+	var superLoadView = that.loadView;
 	that.loadView = function (element) {
 		/**
 	* 1. Load the view
@@ -22,8 +21,7 @@ WebApp.TabsViewController = function (options) {
 	* for each, create the corresponding view controller, container, get icon and label
 	* 4. Remove the <tabs>
 	*/
-		var that = this;
-		WebApp.TabsViewController.prototype.loadView.call(
+		superLoadView.call(
 			that, element, function () {
 				that.contentElement = that.element.querySelector("view");
 				that.element.forEach("tabs tab", function(el) {
@@ -53,7 +51,6 @@ WebApp.TabsViewController = function (options) {
 	* 7. Warn the delegate that we did select a tab
 	* 8. Warn the view controller of the newly selected tab that its view did appear
 	*/
-		var that = this;
 		if(idx<0 && idx >= that.tabs.length && idx != that.selected) {
 			return;
 		}
@@ -71,6 +68,7 @@ WebApp.TabsViewController = function (options) {
 		that.didSelect(idx);
 		that.tabs[idx].viewController.didAppear();
 	};
+	
+	return that;
 };
 
-WebApp.TabsViewController.prototype = new WebApp.ViewController();

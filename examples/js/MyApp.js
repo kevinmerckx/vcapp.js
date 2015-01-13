@@ -1,6 +1,6 @@
 WebApp.registerApp(
 	"MyApp", 
-	WebApp.Application, 
+	WebApp.makeApplication, 
 	{
 		rootViewController: "MyTabsCtrl"
 	}
@@ -8,7 +8,7 @@ WebApp.registerApp(
 
 WebApp.registerViewController(
 	"MyTabsCtrl",
-	WebApp.TabsViewController,
+	WebApp.makeTabsViewController,
 	{
 		template: "templates/tabsView.html",
 		didLoad: function() {
@@ -44,7 +44,7 @@ WebApp.registerViewController(
 
 WebApp.registerViewController(
 	"MyTabsCtrl2",
-	WebApp.TabsViewController,
+	WebApp.makeTabsViewController,
 	{
 		template: "templates/tabsView2.html",
 		didLoad: function() {
@@ -80,7 +80,7 @@ WebApp.registerViewController(
 
 WebApp.registerViewController(
 	"MyNavCtrl",
-	WebApp.NavigationViewController,
+	WebApp.makeNavigationViewController,
 	{
 		template: "templates/navView.html",
 		timeBeforeUnloadingView: 1000,
@@ -131,7 +131,7 @@ WebApp.registerViewController(
 
 WebApp.registerViewController(
 	"MainViewController", 
-	WebApp.ViewController, 
+	WebApp.makeViewController, 
 	{
 		template: "templates/mainView.html",
 		willLoad: function() {
@@ -175,7 +175,7 @@ WebApp.registerViewController(
 
 WebApp.registerViewController(
 	"MainViewController2", 
-	WebApp.ViewController,
+	WebApp.makeViewController,
 	{
 		template: "templates/mainView2.html",
 		didLoad: function() {
@@ -201,7 +201,7 @@ WebApp.registerViewController(
 
 WebApp.registerViewController(
 	"MainViewController3", 
-	WebApp.ViewController,
+	WebApp.makeViewController,
 	{
 		template: "templates/mainView3.html",
 		didLoad: function() {
@@ -212,7 +212,7 @@ WebApp.registerViewController(
 
 WebApp.registerViewController(
 	"MyModalCtrl", 
-	WebApp.ModalViewController,
+	WebApp.makeModalViewController,
 	{
 		template: "templates/modal.html",
 		open: function() {

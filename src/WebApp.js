@@ -8,14 +8,14 @@ var WebApp = {
 
 WebApp.registerApp = function(id, app, options) {
 	this.apps[id] = {
-		constructor: app,
+		maker: app,
 		options: options
 	};
 }
 
 WebApp.registerViewController = function(id, vc, options) {
 	this.viewControllers[id] = {
-		constructor: vc,
+		maker: vc,
 		options: options
 	};
 }
@@ -29,6 +29,6 @@ WebApp.createViewController = function(id, options) {
 		for(var key in options) {
 			fullOpts[key] = options[key];
 		}
-		return new (this.viewControllers[id].constructor)(fullOpts);
+		return (this.viewControllers[id].maker)(fullOpts);
 	}
 }
