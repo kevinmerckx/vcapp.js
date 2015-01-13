@@ -1,6 +1,6 @@
 WebApp.makeNavigationViewController = function(options, that) {
 	'use strict';
-	
+
 	that = WebApp.makeViewController(options, that);
 
 	that.timeBeforeUnloadingView = that.options.timeBeforeUnloadingView || 100;
@@ -25,14 +25,25 @@ WebApp.makeNavigationViewController = function(options, that) {
 			that, 
 			element, 
 			function() {
-				that.contentElement = that.element.querySelector("view");
-				var top = that.contentElement.getAttribute("top");
+				that.contentElement = that.getContentElement();
+				var top = that.getTopViewController();
 				if(top) {
 					that.push(WebApp.createViewController(top));
 				}
-				that.contentElement.removeAttribute("top");
 			}
 		);
+	};
+	
+	/* default implementation */
+	that.getContentElement = function () {
+		return that.element.querySelector("view");
+	};
+
+	/* default implementation */
+	that.getTopViewController = function () {
+		var top = that.element.querySelector("view").getAttribute("top");
+		that.contentElement.removeAttribute("top");
+		return top;
 	};
 
 	that.push = function(vc) {
@@ -103,6 +114,6 @@ WebApp.makeNavigationViewController = function(options, that) {
 		if(that.history.length === 0) return;
 		return that.history[that.history.length-1];
 	};
-	
+
 	return that;
 }
