@@ -255,3 +255,8 @@ WebApp.registerViewController(
 		}
 	}
 );
+
+document.addEventListener("DOMContentLoaded", function() {
+	var myApp = WebApp.apps["MyApp"].maker(WebApp.apps["MyApp"].options);
+	myApp.launch();
+});
