@@ -1,0 +1,27 @@
+{
+  "name": "vcapp.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/kevinmerckx/vcapp.js",
+  "authors": [
+    "kevinmerckx <kevin.merckx.enst@gmail.com>"
+  ],
+  "main": "src/vcapp.min.js",
+  "keywords": [
+    "web",
+    "application",
+    "view",
+    "controller",
+    "logic"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "~2.1.15"
+  }
+}
