@@ -74,7 +74,7 @@ define([], function () {
 			rootViewController && rootViewController.unloadView();
 			rootViewController = vc;
 			vc && vc.willAppear();
-			vc.loadView(document.querySelector("body"), function() {
+			vc && vc.loadView(document.querySelector("body"), function() {
 				vc && vc.didAppear();
 			});
 		};
@@ -141,7 +141,6 @@ define([], function () {
 			*/
 			that.isLoaded = false;
 			that.willUnload();
-			that.element.remove();
 			done && done();
 			that.didUnload();
 		};
