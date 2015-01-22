@@ -5,7 +5,7 @@
   "authors": [
     "kevinmerckx <kevin.merckx.enst@gmail.com>"
   ],
-  "main": "src/vcapp.min.js",
+  "main": "src/WebApp.js",
   "keywords": [
     "web",
     "application",
