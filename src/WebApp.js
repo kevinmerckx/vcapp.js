@@ -71,7 +71,9 @@ define([], function () {
 			* 3. Load the view into <body>
 			* 4. When done, warns the delegate that the view appeared
 			*/
+			rootViewController && rootViewController.willUnappear();
 			rootViewController && rootViewController.unloadView();
+			rootViewController && rootViewController.didUnappear();
 			rootViewController = vc;
 			vc && vc.willAppear();
 			vc && vc.loadView(document.querySelector("body"), function() {
