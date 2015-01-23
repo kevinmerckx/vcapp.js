@@ -202,6 +202,22 @@ define([], function () {
 			);
 		};
 
+		var superUnloadView = that.unloadView;
+		that.unloadView = function () {
+			that.history.forEach(function (vc) {
+				vc.willUnappear();
+				vc.willUnload();
+			});
+			superUnloadView.call(
+				that, 
+				function () {
+					that.history.forEach(function (vc) {
+						vc.didUnappear();
+						vc.didUnload();
+					});
+				});
+		};
+
 		/* default implementation */
 		that.getContentElement = function () {
 			return that.element.querySelector("view");
@@ -358,6 +374,22 @@ define([], function () {
 			);
 		};
 
+		var superUnloadView = that.unloadView;
+		that.unloadView = function () {
+			that.tabs.forEach(function (t) {
+				t.viewController.willUnappear();
+				t.viewController.willUnload();
+			});
+			superUnloadView.call(
+				that, 
+				function () {
+					that.tabs.forEach(function (t) {
+						t.viewController.didUnappear();
+						t.viewController.didUnload();
+					});
+				});
+		};
+		
 		that.select = function (idx) {
 			/**
 			* 1. Warn the delegate that we will unselect the current tab
