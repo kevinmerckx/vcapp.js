@@ -219,12 +219,15 @@ define([], function () {
 		};
 
 		/* default implementation */
-		that.getContentElement = function () {
+		that.getContentElement = that.options.getContentElement || 
+			function () {
 			return that.element.querySelector("view");
 		};
 
 		/* default implementation */
-		that.getTopViewController = function () {
+		that.getTopViewController = 
+			that.options.getTopViewController || 
+			function () {
 			var top = that.element.querySelector("view").getAttribute("top");
 			that.contentElement.removeAttribute("top");
 			return top;
@@ -389,7 +392,7 @@ define([], function () {
 					});
 				});
 		};
-		
+
 		that.select = function (idx) {
 			/**
 			* 1. Warn the delegate that we will unselect the current tab
