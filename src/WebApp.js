@@ -194,10 +194,7 @@ define([], function () {
 				element, 
 				function() {
 					that.contentElement = that.getContentElement();
-					var top = that.getTopViewController();
-					if(top) {
-						that.push(WebApp.createViewController(top));
-					}
+					that.push(that.getTopViewController());
 				}
 			);
 		};
@@ -230,7 +227,7 @@ define([], function () {
 			function () {
 			var top = that.element.querySelector("view").getAttribute("top");
 			that.contentElement.removeAttribute("top");
-			return top;
+			return WebApp.createViewController(top);
 		};
 
 		that.push = function(vc) {
