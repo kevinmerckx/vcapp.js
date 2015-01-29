@@ -246,12 +246,12 @@ define([], function () {
 
 			that.willPush(vc);
 			that.willChangeTop();
-			vc.willAppear();
 			currentTop && currentTop.willUnappear();
 
 			that.history.push(vc);
 			var div = document.createElement('div');
 			vc.loadView(div, function() {
+				vc.willAppear();
 				that.contentElement.appendChild(div);
 				that.didPush(vc);
 				that.didChangeTop();
@@ -448,4 +448,3 @@ define([], function () {
 
 	return WebApp;
 });
-
