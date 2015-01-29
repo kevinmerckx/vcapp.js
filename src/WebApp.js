@@ -126,8 +126,8 @@ define([], function () {
 					Array.prototype.slice.call(that.element.querySelectorAll("*[id]")).forEach(function(el) {
 						that.uiElements[el.getAttribute("id")] = el;
 					});
-					done && done();
 					that.didLoad();
+					done && done();
 				});
 			} else {
 				that.didLoad();
