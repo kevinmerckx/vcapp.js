@@ -184,7 +184,7 @@ define([], function () {
 		that.history = [];
 
 		var superLoadView = that.loadView;
-		that.loadView = function(element) {
+		that.loadView = function(element, done) {
 			/**
 			* When it loads the view, it looks at the "top" attribute of the "view" element.
 			* Inside this attribute should be a view controller: we push this view controller.
@@ -195,12 +195,13 @@ define([], function () {
 				function() {
 					that.contentElement = that.getContentElement();
 					that.push(that.getTopViewController());
+					done && done();
 				}
 			);
 		};
 
 		var superUnloadView = that.unloadView;
-		that.unloadView = function () {
+		that.unloadView = function (done) {
 			that.history.forEach(function (vc) {
 				vc.willUnappear();
 				vc.willUnload();
@@ -211,6 +212,7 @@ define([], function () {
 					that.history.forEach(function (vc) {
 						vc.didUnappear();
 						vc.didUnload();
+						done && done();
 					});
 				});
 		};
