@@ -441,8 +441,8 @@ define([], function () {
 		xhr.onload = function() {
 			done && done(this.responseXML.body.childNodes[0]);
 		}
-		xhr.responseType = "document";
 		xhr.open("get", template, true);
+		xhr.responseType = "document";
 		xhr.send();
 	};
 
