@@ -73,6 +73,7 @@ define([], function () {
 			*/
 			rootViewController && rootViewController.willUnappear();
 			rootViewController && rootViewController.unloadView();
+			rootViewController && rootViewController.element.remove();
 			rootViewController && rootViewController.didUnappear();
 			rootViewController = vc;
 			vc && vc.willAppear();
