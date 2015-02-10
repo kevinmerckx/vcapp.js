@@ -76,7 +76,8 @@ define([], function () {
 			rootViewController && rootViewController.didUnappear();
 			rootViewController = vc;
 			vc && vc.willAppear();
-			vc && vc.loadView(document.querySelector("body"), function() {
+			vc && vc.loadView(function() {
+				document.querySelector("body").appendChild(vc.element);
 				vc && vc.didAppear();
 			});
 		};
@@ -107,7 +108,7 @@ define([], function () {
 		that.uiElements = {};
 
 		that.isLoaded = false;
-		that.loadView = function(element, done) {
+		that.loadView = function(done) {
 			/**
 			* 1. Warn the delegate that the view will load
 			* 2. If a template is given, go to step 4, otherwise go to step 3
@@ -118,16 +119,16 @@ define([], function () {
 			* 6. Call the callback "done" if any
 			* 7. Warn the delegate that the view did load
 			*/
-			that.element = element;
 			that.willLoad();
 			if(that.options.template) {
-				WebApp.loadTemplate(that.options.template).into(that.element, function() {
+				WebApp.loadTemplate(that.options.template, function(element) {
+					that.element = element;
 					that.isLoaded = true;
 					Array.prototype.slice.call(that.element.querySelectorAll("*[id]")).forEach(function(el) {
 						that.uiElements[el.getAttribute("id")] = el;
 					});
-					that.didLoad();
 					done && done();
+					that.didLoad();
 				});
 			} else {
 				that.didLoad();
@@ -184,18 +185,17 @@ define([], function () {
 		that.history = [];
 
 		var superLoadView = that.loadView;
-		that.loadView = function(element, done) {
+		that.loadView = function(done) {
 			/**
 			* When it loads the view, it looks at the "top" attribute of the "view" element.
 			* Inside this attribute should be a view controller: we push this view controller.
 			*/
 			superLoadView.call(
 				that, 
-				element, 
-				function() {
+				function(element) {
 					that.contentElement = that.getContentElement();
 					that.push(that.getTopViewController());
-					done && done();
+					done && done(element);
 				}
 			);
 		};
@@ -251,10 +251,9 @@ define([], function () {
 			currentTop && currentTop.willUnappear();
 
 			that.history.push(vc);
-			var div = document.createElement('div');
-			vc.loadView(div, function() {
+			vc.loadView(function(element) {
 				vc.willAppear();
-				that.contentElement.appendChild(div);
+				that.contentElement.appendChild(vc.element);
 				that.didPush(vc);
 				that.didChangeTop();
 				vc.didAppear();
@@ -349,7 +348,7 @@ define([], function () {
 		that.selected = -1;
 
 		var superLoadView = that.loadView;
-		that.loadView = function (element) {
+		that.loadView = function (done) {
 			/**
 			* 1. Load the view
 			* 2. Look for the <view> inside the element, it is the contentElement
@@ -358,14 +357,14 @@ define([], function () {
 			* 4. Remove the <tabs>
 			*/
 			superLoadView.call(
-				that, element, function () {
+				that, function () {
+					done && done();
 					that.contentElement = that.element.querySelector("view");
 					that.element.forEach("tabs tab", function(el) {
 						that.tabs.push({
 							label: el.getAttribute("label"),
 							icon: el.getAttribute("icon"),
 							viewController: WebApp.createViewController(el.getAttribute("root")),
-							container: document.createElement('div'),
 							isLoaded: false
 						});
 					});
@@ -397,8 +396,8 @@ define([], function () {
 			* 1. Warn the delegate that we will unselect the current tab
 			* 2. Warn the delegate that we will select a tab
 			* 3. Warn the view controller of the newly selected tab that its view will appear
-			* 4. Load the view inside the tab container if necessary
-			* 5. append the container of the tab it to the contentElement if necessary
+			* 4. Load the view if necessary
+			* 5. Append the view if necessary
 			* 6. Warn the delegate that we did unselect the current tab
 			* 7. Warn the delegate that we did select a tab
 			* 8. Warn the view controller of the newly selected tab that its view did appear
@@ -411,35 +410,39 @@ define([], function () {
 			that.willSelect(idx);
 			that.tabs[idx].viewController.willAppear();
 			previouslySelected >=0 && that.tabs[previouslySelected].viewController.willUnappear();
+			var onLoaded = function () {
+				previouslySelected >=0 && that.didUnselect(previouslySelected);
+				that.selected = idx;
+				that.didSelect(idx);
+				that.tabs[idx].viewController.didAppear();
+				previouslySelected >=0 && that.tabs[previouslySelected].viewController.didUnappear();
+			};
+
 			if(!that.tabs[idx].isLoaded) {
-				that.contentElement.appendChild(that.tabs[idx].container);
-				that.tabs[idx].viewController.loadView(that.tabs[idx].container);
-				that.tabs[idx].isLoaded = true;
+				that.tabs[idx].viewController.loadView(function(element){
+					that.contentElement.appendChild(that.tabs[idx].viewController.element);
+					that.tabs[idx].isLoaded = true;
+					onLoaded();
+				});
+			} else {
+				onLoaded();
 			}
 
-			previouslySelected >=0 && that.didUnselect(previouslySelected);
-			that.selected = idx;
-			that.didSelect(idx);
-			that.tabs[idx].viewController.didAppear();
-			previouslySelected >=0 && that.tabs[previouslySelected].viewController.didUnappear();
+
 		};
 
 		return that;
 	};
 
 	/* This function replaces the purpose of $.load */
-	WebApp.loadTemplate = function(template) {
-		return {
-			into: function(element, done) {
-				var req = new XMLHttpRequest();
-				req.onload = function() {
-					element.innerHTML = this.responseText;
-					done && done();
-				}
-				req.open("get", template, true);
-				req.send();
-			}
-		};
+	WebApp.loadTemplate = function(template, done) {
+		var xhr = new XMLHttpRequest();
+		xhr.onload = function() {
+			done && done(this.responseXML.body.childNodes[0]);
+		}
+		xhr.responseType = "document";
+		xhr.open("get", template, true);
+		xhr.send();
 	};
 
 	/* This function looks for the elements defined by the selector inside the current DOM element and apply the f function for each of them */

@@ -1,4 +1,4 @@
-define(['http://code.jquery.com/jquery-2.1.3.min.js','/src/vcapp.min.js'], function($, WebApp) {
+define(['http://code.jquery.com/jquery-2.1.3.min.js', '/src/WebApp.js'], function($, WebApp) {
 	$ = jQuery;
 	WebApp.registerApp(
 		"MyApp", 
@@ -28,16 +28,15 @@ define(['http://code.jquery.com/jquery-2.1.3.min.js','/src/vcapp.min.js'], funct
 						event.data.select(idx);
 					});
 				});
-				$(that.contentElement).addClass("has-tabs scroll-content");
 				that.select(0);
 			},
 			willUnselect: function(idx) {
-				$(this.tabs[idx].container).hide();
+				$(this.tabs[idx].viewController.element).hide();
 			},
 			willSelect: function(idx) {
-				$(this.tabs[idx].container).show();
 			},
 			didSelect: function(idx) {
+				$(this.tabs[idx].viewController.element).show();
 				$(">a.active", this.divTabs).removeClass("active");
 				$(">a:nth-child(" + (idx+1) +")", this.divTabs).addClass("active");
 			}
@@ -68,12 +67,13 @@ define(['http://code.jquery.com/jquery-2.1.3.min.js','/src/vcapp.min.js'], funct
 				that.select(0);
 			},
 			willUnselect: function(idx) {
-				$(this.tabs[idx].container).hide();
+				$(this.tabs[idx].element).hide();
 			},
 			willSelect: function(idx) {
-				$(this.tabs[idx].container).show();
+			
 			},
 			didSelect: function(idx) {
+				$(this.tabs[idx].element).show();
 				$(">a.active", this.divTabs).removeClass("active");
 				$(">a:nth-child(" + (idx+1) +")", this.divTabs).addClass("active");
 			}
